@@ -117,7 +117,7 @@ function renderHeaderSection(
   const summaryRows: { icon: string; color: string; text: string }[] = [];
   if (showSummary) {
     summaryRows.push(
-      { icon: "fire", color: "#ff6b35", text: `${totalContributions.toLocaleString()} contributions in the last year` },
+      { icon: "fire", color: "#ff6b35", text: `${totalContributions.toLocaleString()} contributions in last year` },
       { icon: "repo", color: theme.accent, text: `${user.repositories.totalCount} public repositories` },
       { icon: "calendar", color: "#9ca3af", text: `Joined GitHub ${getYearsAgo(stats.accountCreatedAt)}` },
     );
