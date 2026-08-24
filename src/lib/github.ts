@@ -13,6 +13,15 @@ const graphqlWithAuth = graphql.defaults({
   },
 });
 
+function renameGoToGolang(languages: LanguageStats[]): LanguageStats[] {
+  return languages.map(lang => {
+    if (lang.name === 'Go') {
+      return { ...lang, name: 'Golang' };
+    }
+    return lang;
+  });
+}
+
 function calculateStreaks(contributionDays: ContributionDay[]): { current: StreakInfo; longest: StreakInfo } {
   if (!contributionDays || contributionDays.length === 0) {
     return {
@@ -207,13 +216,16 @@ export async function fetchGitHubStats(username: string, hiddenLanguages: string
     }
 
     const totalLangSize = Array.from(languageMap.values()).reduce((s, l) => s + l.size, 0);
-    const languages: LanguageStats[] = Array.from(languageMap.values())
+    let languages: LanguageStats[] = Array.from(languageMap.values())
       .map(l => ({
         ...l,
         percentage: totalLangSize > 0 ? (l.size / totalLangSize) * 100 : 0
       }))
       .sort((a, b) => b.percentage - a.percentage)
       .slice(0, 8);
+
+    // Rename "Go" to "Golang"
+    languages = renameGoToGolang(languages);
 
     const contributionDays: ContributionDay[] = user.contributionsCollection.contributionCalendar.weeks
       .flatMap((w) => w.contributionDays);

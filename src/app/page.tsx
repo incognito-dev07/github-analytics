@@ -13,6 +13,7 @@ export default function Home() {
   const [showHeader, setShowHeader] = useState(true);
   const [showSummary, setShowSummary] = useState(true);
   const [showProfile, setShowProfile] = useState(true);
+  const [hideHtmlCss, setHideHtmlCss] = useState(false);
   const [refreshKey, setRefreshKey] = useState(Date.now());
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -36,6 +37,9 @@ export default function Home() {
     if (!showHeader) params.append('header', 'false');
     if (!showSummary) params.append('summary', 'false');
     if (!showProfile) params.append('profile', 'false');
+    if (hideHtmlCss) {
+      params.append('hide_langs', 'HTML,CSS');
+    }
     return params;
   }
 
@@ -59,7 +63,8 @@ export default function Home() {
       g.showStats !== showStats ||
       g.showHeader !== showHeader ||
       g.showSummary !== showSummary ||
-      g.showProfile !== showProfile
+      g.showProfile !== showProfile ||
+      g.hideHtmlCss !== hideHtmlCss
     );
   }
 
@@ -164,6 +169,7 @@ export default function Home() {
       showHeader,
       showSummary,
       showProfile,
+      hideHtmlCss,
     });
     setGeneratedUsername(usernameVal);
     setRefreshKey(Date.now());
@@ -178,6 +184,9 @@ export default function Home() {
     if (!showHeader) params.append('header', 'false');
     if (!showSummary) params.append('summary', 'false');
     if (!showProfile) params.append('profile', 'false');
+    if (hideHtmlCss) {
+      params.append('hide_langs', 'HTML,CSS');
+    }
     params.append('_t', Date.now().toString());
 
     fetch(`/api?${params.toString()}`)
@@ -217,7 +226,7 @@ export default function Home() {
 
   useEffect(() => {
     renderPreview();
-  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showSummary, showProfile]);
+  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showSummary, showProfile, hideHtmlCss]);
 
   return (
     <div id="root">
@@ -315,6 +324,11 @@ export default function Home() {
                   <input type="checkbox" checked={showGraph} onChange={(e) => setShowGraph(e.target.checked)} />
                   <span className="checkmark"></span>
                   <span className="label-text">Contribution Graph</span>
+                </label>
+                <label>
+                  <input type="checkbox" checked={hideHtmlCss} onChange={(e) => setHideHtmlCss(e.target.checked)} />
+                  <span className="checkmark"></span>
+                  <span className="label-text">Hide HTML &amp; CSS</span>
                 </label>
               </div>
             </div>
