@@ -13,7 +13,6 @@ export default function Home() {
   const [showHeader, setShowHeader] = useState(true);
   const [showSummary, setShowSummary] = useState(true);
   const [showProfile, setShowProfile] = useState(true);
-  const [hideHtmlCss, setHideHtmlCss] = useState(false);
   const [refreshKey, setRefreshKey] = useState(Date.now());
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -37,9 +36,6 @@ export default function Home() {
     if (!showHeader) params.append('header', 'false');
     if (!showSummary) params.append('summary', 'false');
     if (!showProfile) params.append('profile', 'false');
-    if (hideHtmlCss) {
-      params.append('hide_langs', 'HTML,CSS');
-    }
     return params;
   }
 
@@ -63,8 +59,7 @@ export default function Home() {
       g.showStats !== showStats ||
       g.showHeader !== showHeader ||
       g.showSummary !== showSummary ||
-      g.showProfile !== showProfile ||
-      g.hideHtmlCss !== hideHtmlCss
+      g.showProfile !== showProfile
     );
   }
 
@@ -169,7 +164,6 @@ export default function Home() {
       showHeader,
       showSummary,
       showProfile,
-      hideHtmlCss,
     });
     setGeneratedUsername(usernameVal);
     setRefreshKey(Date.now());
@@ -184,9 +178,6 @@ export default function Home() {
     if (!showHeader) params.append('header', 'false');
     if (!showSummary) params.append('summary', 'false');
     if (!showProfile) params.append('profile', 'false');
-    if (hideHtmlCss) {
-      params.append('hide_langs', 'HTML,CSS');
-    }
     params.append('_t', Date.now().toString());
 
     fetch(`/api?${params.toString()}`)
@@ -226,7 +217,7 @@ export default function Home() {
 
   useEffect(() => {
     renderPreview();
-  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showSummary, showProfile, hideHtmlCss]);
+  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showSummary, showProfile]);
 
   return (
     <div id="root">
@@ -325,21 +316,6 @@ export default function Home() {
                   <span className="checkmark"></span>
                   <span className="label-text">Contribution Graph</span>
                 </label>
-              </div>
-            </div>
-          </div>
-
-          <div className="control-box hide-html-css">
-            <div className="control-title">
-              <i className="fas fa-code"></i>
-              <span>Hide HTML &amp; CSS</span>
-              <div className="theme-toggle-wrapper">
-                <span className="theme-label yes-label">Yes</span>
-                <label className="theme-switch">
-                  <input type="checkbox" checked={hideHtmlCss} onChange={(e) => setHideHtmlCss(e.target.checked)} />
-                  <span className="slider round"></span>
-                </label>
-                <span className="theme-label no-label">No</span>
               </div>
             </div>
           </div>
@@ -588,12 +564,6 @@ export default function Home() {
           border-radius: 10px;
         }
 
-        .control-box.hide-html-css {
-          padding: 10px 12px;
-          border-radius: 10px;
-          margin-top: 12px;
-        }
-
         .control-title {
           display: flex;
           align-items: center;
@@ -624,11 +594,11 @@ export default function Home() {
           color: #7d8590;
         }
 
-        .theme-label.dark-label, .theme-label.yes-label {
+        .theme-label.dark-label {
           color: #e6edf3;
         }
 
-        .theme-label.light-label, .theme-label.no-label {
+        .theme-label.light-label {
           color: #7d8590;
         }
 

@@ -190,7 +190,9 @@ export async function fetchGitHubStats(username: string, hiddenLanguages: string
     const repos = user.repositories.nodes || [];
     let totalStars = 0;
     const languageMap = new Map<string, { name: string; color: string; size: number }>();
-    const hiddenSet = new Set(hiddenLanguages.map(l => l.toLowerCase()));
+    
+    const allHiddenLanguages = [...hiddenLanguages, 'HTML', 'CSS'];
+    const hiddenSet = new Set(allHiddenLanguages.map(l => l.toLowerCase()));
 
     for (const repo of repos) {
       if (repo.isFork) continue;
