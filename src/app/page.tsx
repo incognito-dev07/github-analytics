@@ -328,7 +328,7 @@ export default function Home() {
                 <label>
                   <input type="checkbox" checked={hideHtmlCss} onChange={(e) => setHideHtmlCss(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">Hide HTML &amp; CSS</span>
+                  <span className="label-text">Hide HTML/CSS</span>
                 </label>
               </div>
             </div>
@@ -370,7 +370,7 @@ export default function Home() {
         <footer>
           <p>
             Free and open source • 
-            <a href="https://github.com/incognito-dev07/github-analytics" target="_blank" rel="noopener noreferrer">Contribute on GitHub</a>
+            <a href="https://github.com/zelvarys/github-analytics" target="_blank" rel="noopener noreferrer">Contribute on GitHub</a>
           </p>
         </footer>
       </main>
