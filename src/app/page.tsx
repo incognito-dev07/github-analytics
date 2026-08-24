@@ -325,12 +325,22 @@ export default function Home() {
                   <span className="checkmark"></span>
                   <span className="label-text">Contribution Graph</span>
                 </label>
-                <label>
-                  <input type="checkbox" checked={hideHtmlCss} onChange={(e) => setHideHtmlCss(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Hide HTML/CSS</span>
-                </label>
               </div>
+            </div>
+          </div>
+
+          <div className="toggle-row">
+            <div className="toggle-label">
+              <i className="fas fa-code"></i>
+              <span>Hide HTML/CSS</span>
+            </div>
+            <div className="toggle-wrapper">
+              <span className="toggle-option no">No</span>
+              <label className="toggle-switch">
+                <input type="checkbox" checked={hideHtmlCss} onChange={(e) => setHideHtmlCss(e.target.checked)} />
+                <span className="slider round"></span>
+              </label>
+              <span className="toggle-option yes">Yes</span>
             </div>
           </div>
         </div>
@@ -725,6 +735,108 @@ export default function Home() {
 
         .checkbox-grid label:has(input:checked) .label-text {
           color: #58a6ff;
+        }
+
+        .toggle-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #161b22;
+          border: 1px solid #30363d;
+          border-radius: 12px;
+          padding: 12px 16px;
+          margin-top: 12px;
+        }
+
+        .toggle-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .toggle-label i {
+          color: #7d8590;
+          font-size: 14px;
+        }
+
+        .toggle-label span {
+          font-size: 14px;
+          font-weight: 600;
+          color: #e6edf3;
+        }
+
+        .toggle-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .toggle-option {
+          font-size: 13px;
+          font-weight: 600;
+          color: #7d8590;
+        }
+
+        .toggle-option.no {
+          color: #e6edf3;
+        }
+
+        .toggle-option.yes {
+          color: #7d8590;
+        }
+
+        .toggle-option.yes.active {
+          color: #e6edf3;
+        }
+
+        .toggle-option.no.active {
+          color: #7d8590;
+        }
+
+        .toggle-switch {
+          position: relative;
+          display: inline-block;
+          width: 44px;
+          height: 24px;
+          flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+
+        .toggle-switch .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #30363d;
+          transition: .3s;
+          border-radius: 34px;
+        }
+
+        .toggle-switch .slider:before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: #e6edf3;
+          transition: .3s;
+          border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .slider {
+          background-color: #1f6feb;
+        }
+
+        .toggle-switch input:checked + .slider:before {
+          transform: translateX(20px);
         }
 
         .preview-section {
