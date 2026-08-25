@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    console.log(`📊 Fetching stats for ${username}...`);
+    console.log(`Fetching stats for ${username}...`);
     const stats = await fetchGitHubStats(username, hiddenLanguages);
     const themeColors = getTheme(theme);
     const svg = generateInsightCard(stats, {
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('Error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Failed to generate stats';
     return new NextResponse(`Error: ${errorMessage}`, { status: 500 });
   }
