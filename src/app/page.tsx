@@ -304,7 +304,7 @@ export default function Home() {
                 <label>
                   <input type="checkbox" checked={showLanguages} onChange={(e) => setShowLanguages(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">Language Arsenal</span>
+                  <span className="label-text">Primary Languages</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showStreak} onChange={(e) => setShowStreak(e.target.checked)} />
