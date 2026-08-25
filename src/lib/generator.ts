@@ -196,7 +196,7 @@ function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number,
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
       <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 28)">${renderIcon("activity", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">General Stats</text></g>
+      <g transform="translate(24, 28)">${renderIcon("activity", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">General Statistics</text></g>
       <g transform="translate(24, 60)">${statsSvgParts.join("")}</g>
       <g transform="translate(290, 62)">
         <circle cx="36" cy="36" r="34" fill="${theme.background}" stroke="${gradeColor}" stroke-width="2.5"/>
@@ -254,7 +254,7 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
       <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 28)">${renderIcon("code", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Top Languages</text></g>
+      <g transform="translate(24, 28)">${renderIcon("code", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Most Used Languages</text></g>
       <g transform="translate(24, 60)">
         <defs><clipPath id="langBarClip"><rect x="0" y="0" width="${barWidth}" height="${barHeight}" rx="${borderRadius}"/></clipPath></defs>
         <rect x="0" y="0" width="${barWidth}" height="${barHeight}" rx="${borderRadius}" fill="${theme.background}"/>
