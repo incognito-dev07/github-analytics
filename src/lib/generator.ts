@@ -254,7 +254,7 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
       <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 28)">${renderIcon("code", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Active Languages</text></g>
+      <g transform="translate(24, 28)">${renderIcon("code", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Language Arsenal</text></g>
       <g transform="translate(24, 60)">
         <defs><clipPath id="langBarClip"><rect x="0" y="0" width="${barWidth}" height="${barHeight}" rx="${borderRadius}"/></clipPath></defs>
         <rect x="0" y="0" width="${barWidth}" height="${barHeight}" rx="${borderRadius}" fill="${theme.background}"/>
