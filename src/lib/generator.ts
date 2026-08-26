@@ -282,7 +282,7 @@ function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: num
 
   return {
     svg: `<g transform="translate(40, ${startY})">
-      <g transform="translate(0, 0)">
+      <g transform="translate(0, 10)">
         <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(${cardWidth3 / 2}, 24)">
           ${renderIcon("contribution", -10, 0, theme.accent, 20)}
@@ -297,7 +297,7 @@ function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: num
           ${formatDateFull(accountCreatedAt)} - Present
         </text>
       </g>
-      <g transform="translate(${cardWidth3 + 16}, 0)">
+      <g transform="translate(${cardWidth3 + 16}, 10)">
         <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(${cardWidth3 / 2}, 52)">
           <circle cx="0" cy="0" r="${circleRadius}" fill="none" stroke="${theme.border}" stroke-width="${strokeWidth}" opacity="0.4"/>
@@ -316,7 +316,7 @@ function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: num
           ${currentStreak.startDate ? formatDateRange(currentStreak.startDate, currentStreak.endDate) : "No active streak"}
         </text>
       </g>
-      <g transform="translate(${(cardWidth3 + 16) * 2}, 0)">
+      <g transform="translate(${(cardWidth3 + 16) * 2}, 10)">
         <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(${cardWidth3 / 2}, 24)">
           ${renderIcon("trophy", -8, 0, theme.accentSecondary, 18)}
@@ -384,7 +384,7 @@ function renderContributionLineGraph(stats: GitHubStats, theme: ThemeColors, sta
 
   return {
     svg: `<g transform="translate(40, ${startY})">
-      <rect x="0" y="0" width="${innerWidth}" height="${graphHeight + 70}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <rect x="0" y="0" width="${innerWidth}" height="${graphHeight + 90}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
       <g transform="translate(24, 16)">
         ${renderIcon("history", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="15" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Contribution Activity</text>
