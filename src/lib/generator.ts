@@ -206,7 +206,7 @@ function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number,
         <circle cx="36" cy="36" r="26" fill="${gradeColor}" opacity="0.1"/>
         <text x="36" y="41" text-anchor="middle" font-size="22" font-weight="700" fill="${gradeColor}" font-family="${FONT_FAMILY}" letter-spacing="0.5">${grade}</text>
       </g>
-      <text x="326" y="174" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
+      <text x="326" y="176" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
     </g>`,
     height: 210
   };
@@ -384,7 +384,7 @@ function renderContributionLineGraph(stats: GitHubStats, theme: ThemeColors, sta
 
   return {
     svg: `<g transform="translate(40, ${startY})">
-      <rect x="0" y="0" width="${innerWidth}" height="${graphHeight + 50}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <rect x="0" y="0" width="${innerWidth}" height="${graphHeight + 70}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
       <g transform="translate(24, 16)">
         ${renderIcon("history", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="15" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Contribution Activity</text>
@@ -406,7 +406,7 @@ function renderContributionLineGraph(stats: GitHubStats, theme: ThemeColors, sta
       </g>
       <g transform="translate(52, ${graphHeight + 76})">${xAxisLabelsSvg}</g>
     </g>`,
-    height: graphHeight + 50 + 28
+    height: graphHeight + 70 + 28
   };
 }
 
@@ -438,13 +438,13 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
   const languagesCard = showLanguages ? renderLanguagesCard(stats, theme, currentY, languagesStartX) : { svg: "", height: 0 };
 
   const statsAndLangsHeight = Math.max(statsCard.height, languagesCard.height);
-  currentY += statsAndLangsHeight + (statsAndLangsHeight > 0 ? 3 : 0);
+  currentY += statsAndLangsHeight + 3;
 
   const streakSection = options.showStreak !== false ? renderStreakSection(stats, theme, currentY, cardWidth) : { svg: "", height: 0 };
-  currentY += streakSection.height + (streakSection.height > 0 ? 3 : 0);
+  currentY += streakSection.height + 3;
 
   const graphSection = options.showGraph !== false ? renderContributionLineGraph(stats, theme, currentY, cardWidth) : { svg: "", height: 0 };
-  currentY += graphSection.height + 16;
+  currentY += graphSection.height;
 
   const cardHeight = currentY + 28;
 
