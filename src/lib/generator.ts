@@ -145,9 +145,6 @@ function renderHeaderSection(
 
   const headerChartSvg = showHeader ? `
     <g transform="translate(${cardWidth - graphWidth - 80}, ${summaryStartY})">
-      <text x="${graphWidth / 2}" y="-8" text-anchor="middle" font-size="12" font-weight="600" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-        Monthly Contributions (Last 12 Months)
-      </text>
       <g transform="translate(${graphWidth + 10}, 0)">
         <text y="10" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
         <text y="${graphHeight / 2 + 4}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
@@ -199,16 +196,19 @@ function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number,
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
       <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 28)">${renderIcon("activity", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">General Statistics</text></g>
-      <g transform="translate(24, 60)">${statsSvgParts.join("")}</g>
-      <g transform="translate(290, 62)">
+      <g transform="translate(24, 24)">
+        ${renderIcon("activity", 0, -1, theme.accent, 18)}
+        <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">General Statistics</text>
+      </g>
+      <g transform="translate(24, 56)">${statsSvgParts.join("")}</g>
+      <g transform="translate(290, 58)">
         <circle cx="36" cy="36" r="34" fill="${theme.background}" stroke="${gradeColor}" stroke-width="2.5"/>
         <circle cx="36" cy="36" r="26" fill="${gradeColor}" opacity="0.1"/>
         <text x="36" y="41" text-anchor="middle" font-size="22" font-weight="700" fill="${gradeColor}" font-family="${FONT_FAMILY}" letter-spacing="0.5">${grade}</text>
       </g>
-      <text x="326" y="156" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
+      <text x="326" y="174" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
     </g>`,
-    height: 218
+    height: 210
   };
 }
 
@@ -257,15 +257,18 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
       <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 28)">${renderIcon("code", 0, -1, theme.accent, 18)}<text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Primary Languages</text></g>
-      <g transform="translate(24, 60)">
+      <g transform="translate(24, 24)">
+        ${renderIcon("code", 0, -1, theme.accent, 18)}
+        <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Primary Languages</text>
+      </g>
+      <g transform="translate(24, 56)">
         <defs><clipPath id="langBarClip"><rect x="0" y="0" width="${barWidth}" height="${barHeight}" rx="${borderRadius}"/></clipPath></defs>
         <rect x="0" y="0" width="${barWidth}" height="${barHeight}" rx="${borderRadius}" fill="${theme.background}"/>
         <g clip-path="url(#langBarClip)">${segmentsSvg}</g>
       </g>
-      <g transform="translate(24, 88)">${leftLangsSvg}${rightLangsSvg}</g>
+      <g transform="translate(24, 84)">${leftLangsSvg}${rightLangsSvg}</g>
     </g>`,
-    height: 218
+    height: 210
   };
 }
 
@@ -381,13 +384,13 @@ function renderContributionLineGraph(stats: GitHubStats, theme: ThemeColors, sta
 
   return {
     svg: `<g transform="translate(40, ${startY})">
-      <rect x="0" y="0" width="${innerWidth}" height="${graphHeight + 80}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 26)">
+      <rect x="0" y="0" width="${innerWidth}" height="${graphHeight + 50}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <g transform="translate(24, 16)">
         ${renderIcon("history", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="15" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Contribution Activity</text>
         <text x="28" y="34" font-size="12" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.2">Daily contributions · ${monthLabel}</text>
       </g>
-      <g transform="translate(36, 62)">
+      <g transform="translate(36, 66)">
         <text x="0" y="5" font-size="10" fill="${theme.textSecondary}" text-anchor="end" font-family="${FONT_FAMILY}" letter-spacing="0.2">${maxCount}</text>
         <text x="0" y="${graphHeight / 2 + 2}" font-size="10" fill="${theme.textSecondary}" text-anchor="end" font-family="${FONT_FAMILY}" letter-spacing="0.2">${Math.round(maxCount / 2)}</text>
         <text x="0" y="${graphHeight - 3}" font-size="10" fill="${theme.textSecondary}" text-anchor="end" font-family="${FONT_FAMILY}" letter-spacing="0.2">0</text>
@@ -395,15 +398,15 @@ function renderContributionLineGraph(stats: GitHubStats, theme: ThemeColors, sta
         <line x1="10" y1="${graphHeight / 2}" x2="${graphWidth + 12}" y2="${graphHeight / 2}" stroke="${theme.border}" stroke-width="0.5" stroke-dasharray="4,2" opacity="0.4"/>
         <line x1="10" y1="${graphHeight}" x2="${graphWidth + 12}" y2="${graphHeight}" stroke="${theme.border}" stroke-width="0.5"/>
       </g>
-      <g transform="translate(52, 62)">
+      <g transform="translate(52, 66)">
         <defs><linearGradient id="graphGradient" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:${theme.accent};stop-opacity:0.3"/><stop offset="100%" style="stop-color:${theme.accent};stop-opacity:0.02"/></linearGradient></defs>
         <path d="${linePath} L ${graphWidth} ${graphHeight} L 0 ${graphHeight} Z" fill="url(#graphGradient)"/>
         <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${dataPointsSvg}
       </g>
-      <g transform="translate(52, ${graphHeight + 72})">${xAxisLabelsSvg}</g>
+      <g transform="translate(52, ${graphHeight + 76})">${xAxisLabelsSvg}</g>
     </g>`,
-    height: graphHeight + 98
+    height: graphHeight + 50 + 28
   };
 }
 
