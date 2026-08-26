@@ -226,7 +226,6 @@ export async function fetchGitHubStats(username: string, hiddenLanguages: string
       .sort((a, b) => b.percentage - a.percentage)
       .slice(0, 8);
 
-    // Rename "Go" to "Golang"
     languages = renameGoToGolang(languages);
 
     const contributionDays: ContributionDay[] = user.contributionsCollection.contributionCalendar.weeks

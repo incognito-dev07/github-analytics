@@ -145,6 +145,9 @@ function renderHeaderSection(
 
   const headerChartSvg = showHeader ? `
     <g transform="translate(${cardWidth - graphWidth - 80}, ${summaryStartY})">
+      <text x="${graphWidth / 2}" y="-8" text-anchor="middle" font-size="12" font-weight="600" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
+        Monthly Contributions (Last 12 Months)
+      </text>
       <g transform="translate(${graphWidth + 10}, 0)">
         <text y="10" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
         <text y="${graphHeight / 2 + 4}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
