@@ -282,7 +282,7 @@ function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: num
 
   return {
     svg: `<g transform="translate(40, ${startY})">
-      <g transform="translate(0, 7)">
+      <g transform="translate(0, 5)">
         <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(${cardWidth3 / 2}, 24)">
           ${renderIcon("contribution", -10, 0, theme.accent, 20)}
@@ -297,7 +297,7 @@ function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: num
           ${formatDateFull(accountCreatedAt)} - Present
         </text>
       </g>
-      <g transform="translate(${cardWidth3 + 16}, 7)">
+      <g transform="translate(${cardWidth3 + 16}, 5)">
         <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(${cardWidth3 / 2}, 52)">
           <circle cx="0" cy="0" r="${circleRadius}" fill="none" stroke="${theme.border}" stroke-width="${strokeWidth}" opacity="0.4"/>
@@ -316,7 +316,7 @@ function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: num
           ${currentStreak.startDate ? formatDateRange(currentStreak.startDate, currentStreak.endDate) : "No active streak"}
         </text>
       </g>
-      <g transform="translate(${(cardWidth3 + 16) * 2}, 7)">
+      <g transform="translate(${(cardWidth3 + 16) * 2}, 5)">
         <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(${cardWidth3 / 2}, 24)">
           ${renderIcon("trophy", -8, 0, theme.accentSecondary, 18)}
