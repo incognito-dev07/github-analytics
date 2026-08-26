@@ -201,12 +201,12 @@ function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number,
         <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">General Statistics</text>
       </g>
       <g transform="translate(24, 56)">${statsSvgParts.join("")}</g>
-      <g transform="translate(290, 58)">
+      <g transform="translate(287, 58)">
         <circle cx="36" cy="36" r="34" fill="${theme.background}" stroke="${gradeColor}" stroke-width="2.5"/>
         <circle cx="36" cy="36" r="26" fill="${gradeColor}" opacity="0.1"/>
         <text x="36" y="41" text-anchor="middle" font-size="22" font-weight="700" fill="${gradeColor}" font-family="${FONT_FAMILY}" letter-spacing="0.5">${grade}</text>
       </g>
-      <text x="326" y="160" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
+      <text x="323" y="155" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
     </g>`,
     height: 210
   };
