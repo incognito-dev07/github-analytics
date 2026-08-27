@@ -196,7 +196,7 @@ function renderHeaderSection(
           </defs>
           <path d="${areaPath}" fill="url(#miniAreaGradient)" />
           <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <g transform="translate(25, ${graphHeight + 12})">
+          <g transform="translate(18, ${graphHeight + 12})">
             ${labelMonths.map((data, idx) => {
               const originalIdx = last10Months.indexOf(data);
               return `<text x="${(originalIdx / Math.max(last10Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
