@@ -122,7 +122,6 @@ function renderHeaderSection(
   let headerSvg = '';
   let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
-  // Developer Score Card (60%) - 4 metrics only
   if (showDevScore) {
     const devScoreCard = `
       <g transform="translate(${startX}, ${currentY})">
@@ -131,9 +130,9 @@ function renderHeaderSection(
           ${renderIcon("zap", 0, -1, theme.accent, 18)}
           <text x="26" y="12" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
         </g>
-        ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 48)}
+        ${renderDeveloperMetric(theme, "Contribution Days", `${stats.activeDays} days`, stats.activeDays, 365, "#a371f7", 108)}
         ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
-        ${renderDeveloperMetric(theme, "Activity Consistency", `${stats.activeDays} days`, stats.activeDays, 365, "#a371f7", 108)}
+        ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 48)}
         ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
       </g>
     `;
@@ -141,7 +140,6 @@ function renderHeaderSection(
     totalHeight = Math.max(totalHeight, currentY + 178 + 10);
   }
 
-  // Monthly Chart Card (40%) - Use last 10 months
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 200;
@@ -160,8 +158,8 @@ function renderHeaderSection(
       linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
     });
 
-    const firstX = 30 + 0;
-    const lastX = 30 + graphWidth;
+    const firstX = 20 + 0;
+    const lastX = 20 + graphWidth;
     areaPoints.unshift(`M ${firstX} ${graphHeight}`);
     areaPoints.push(`L ${lastX} ${graphHeight} Z`);
 
@@ -263,7 +261,6 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   let currentX = 0;
   const segments: { x: number; width: number; color: string }[] = [];
 
-  // Show ALL languages (no cap)
   const validLangs = languages.filter((lang) => (lang.percentage / 100) * barWidth > 0.5);
   const totalPercentage = validLangs.reduce((sum, lang) => sum + lang.percentage, 0);
 
@@ -278,7 +275,6 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
 
   const segmentsSvg = segments.map((seg) => `<rect x="${seg.x}" y="0" width="${seg.width}" height="${barHeight}" fill="${seg.color}"/>`).join("");
 
-  // Split into two columns for display
   const leftColumn = validLangs.filter((_, i) => i % 2 === 0);
   const rightColumn = validLangs.filter((_, i) => i % 2 === 1);
 
@@ -292,9 +288,11 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
     return `<g transform="translate(175, ${y})"><circle cx="6" cy="7" r="5" fill="${lang.color}"/><text x="20" y="11" font-size="12" font-weight="500" fill="${theme.text}" font-family="${FONT_FAMILY}" letter-spacing="0.3">${escapeHtml(lang.name)}</text><text x="155" y="11" font-size="12" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end" letter-spacing="0.2">${lang.percentage.toFixed(1)}%</text></g>`;
   }).join("");
 
+  const langHeight = Math.max(84 + (Math.ceil(validLangs.length / 2) * 27), 90);
+
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
-      <rect x="0" y="0" width="377" height="${Math.max(84 + (Math.ceil(validLangs.length / 2) * 27), 90)}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <rect x="0" y="0" width="377" height="${langHeight}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
       <g transform="translate(24, 24)">
         ${renderIcon("code", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Primary Languages</text>
@@ -306,7 +304,7 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
       </g>
       <g transform="translate(24, 84)">${leftLangsSvg}${rightLangsSvg}</g>
     </g>`,
-    height: Math.max(84 + (Math.ceil(validLangs.length / 2) * 27), 90) + 20
+    height: langHeight + 10
   };
 }
 
