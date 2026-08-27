@@ -11,7 +11,6 @@ export default function Home() {
   const [showStreak, setShowStreak] = useState(true);
   const [showStats, setShowStats] = useState(true);
   const [showHeader, setShowHeader] = useState(true);
-  const [showSummary, setShowSummary] = useState(true);
   const [showProfile, setShowProfile] = useState(true);
   const [refreshKey, setRefreshKey] = useState(Date.now());
   const [isGenerating, setIsGenerating] = useState(false);
@@ -34,7 +33,6 @@ export default function Home() {
     if (!showStreak) params.append('streak', 'false');
     if (!showStats) params.append('stats', 'false');
     if (!showHeader) params.append('header', 'false');
-    if (!showSummary) params.append('summary', 'false');
     if (!showProfile) params.append('profile', 'false');
     return params;
   }
@@ -58,7 +56,6 @@ export default function Home() {
       g.showStreak !== showStreak ||
       g.showStats !== showStats ||
       g.showHeader !== showHeader ||
-      g.showSummary !== showSummary ||
       g.showProfile !== showProfile
     );
   }
@@ -162,7 +159,6 @@ export default function Home() {
       showStreak,
       showStats,
       showHeader,
-      showSummary,
       showProfile,
     });
     setGeneratedUsername(usernameVal);
@@ -176,7 +172,6 @@ export default function Home() {
     if (!showStreak) params.append('streak', 'false');
     if (!showStats) params.append('stats', 'false');
     if (!showHeader) params.append('header', 'false');
-    if (!showSummary) params.append('summary', 'false');
     if (!showProfile) params.append('profile', 'false');
     params.append('_t', Date.now().toString());
 
@@ -217,7 +212,7 @@ export default function Home() {
 
   useEffect(() => {
     renderPreview();
-  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showSummary, showProfile]);
+  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showProfile]);
 
   return (
     <div id="root">
@@ -285,11 +280,6 @@ export default function Home() {
                   <input type="checkbox" checked={showProfile} onChange={(e) => setShowProfile(e.target.checked)} />
                   <span className="checkmark"></span>
                   <span className="label-text">Developer Name</span>
-                </label>
-                <label>
-                  <input type="checkbox" checked={showSummary} onChange={(e) => setShowSummary(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Summary Info</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showHeader} onChange={(e) => setShowHeader(e.target.checked)} />

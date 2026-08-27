@@ -73,29 +73,30 @@ function renderHeaderSection(
     showHeader?: boolean;
   }
 ): { svg: string; height: number } {
-  const { user, totalContributions, monthlyContributions } = stats;
+  const { user, monthlyContributions } = stats;
   const name = escapeHtml(user.name || user.login);
-  const location = user.location ? escapeHtml(user.location) : "";
 
   const showProfile = options.showProfile !== false;
-  const showSummary = options.showSummary !== false;
   const showHeader = options.showHeader !== false;
 
-  if (!showProfile && !showSummary && !showHeader) {
+  if (!showProfile && !showHeader) {
     return { svg: "", height: 0 };
   }
 
   const monthlyData = monthlyContributions || [];
   const graphWidth = 280;
-  const graphHeight = 90;
+  const graphHeight = 70;
   const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
   const areaPoints: string[] = [`M 0 ${graphHeight}`];
   const linePoints: string[] = [];
 
-  monthlyData.forEach((data, i) => {
-    const x = (i / Math.max(monthlyData.length - 1, 1)) * graphWidth;
-    const y = graphHeight - (data.count / maxCount) * (graphHeight - 15);
+  // Use last 7 months only
+  const last7Months = monthlyData.slice(-7);
+
+  last7Months.forEach((data, i) => {
+    const x = (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
+    const y = graphHeight - (data.count / maxCount) * (graphHeight - 10);
     areaPoints.push(`L ${x} ${y}`);
     linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
   });
@@ -114,66 +115,78 @@ function renderHeaderSection(
 
   const profileHeight = showProfile ? 36 : 0;
 
-  const summaryRows: { icon: string; color: string; text: string }[] = [];
-  if (showSummary) {
-    summaryRows.push(
-      { icon: "fire", color: "#ff6b35", text: `${totalContributions.toLocaleString()} contributions in last year` },
-      { icon: "repo", color: theme.accent, text: `${user.repositories.totalCount} public repositories` },
-      { icon: "calendar", color: "#9ca3af", text: `Joined GitHub ${getYearsAgo(stats.accountCreatedAt)}` },
-    );
-    if (location) {
-      summaryRows.push({ icon: "pin", color: "#10b981", text: location });
-    }
-  }
+  // Developer Score Card (60%)
+  const devScoreCard = `
+    <g transform="translate(48, ${profileHeight + (showProfile ? 24 : 0)})">
+      <rect x="0" y="0" width="377" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <g transform="translate(24, 13)">
+        <text x="0" y="12" font-size="14" font-weight="600" fill="${theme.accent}" font-family="${FONT_FAMILY}">Developer Score</text>
+      </g>
+      ${renderDeveloperMetric("Contribution Streak", `${stats.currentStreak.count} days`, stats.currentStreak.count, 365, "#58a6ff", 43)}
+      ${renderDeveloperMetric("Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 73)}
+      ${renderDeveloperMetric("Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 103)}
+      ${renderDeveloperMetric("Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 10, "#3fb950", 133)}
+    </g>
+  `;
 
-  const summaryHeight = summaryRows.length * 26;
-  const headerChartHeight = showHeader ? 120 : 0;
-  const summaryStartY = profileHeight + (showProfile ? 24 : 0);
-
-  const summarySvg = showSummary ? `
-    <g transform="translate(48, ${summaryStartY})">
-      ${summaryRows.map((row, index) => `
-        <g transform="translate(0, ${index * 26})">
-          ${renderIcon(row.icon, 0, -1, row.color, 16)}
-          <text x="26" y="12" font-size="13" fill="${theme.text}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-            ${row.text}
-          </text>
+  // Mini Monthly Chart (40%)
+  const miniChartSvg = showHeader ? `
+    <g transform="translate(${cardWidth - graphWidth - 80}, ${profileHeight + (showProfile ? 24 : 0)})">
+      <rect x="0" y="0" width="280" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <g transform="translate(24, 16)">
+        <text x="0" y="12" font-size="14" font-weight="600" fill="${theme.accent}" font-family="${FONT_FAMILY}">Monthly Chart</text>
+      </g>
+      <g transform="translate(24, 42)">
+        <g transform="translate(${graphWidth + 10}, 0)">
+          <text y="10" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
+          <text y="${graphHeight / 2 + 4}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
+          <text y="${graphHeight}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">0</text>
         </g>
-      `).join("")}
-    </g>
-  ` : "";
-
-  const headerChartSvg = showHeader ? `
-    <g transform="translate(${cardWidth - graphWidth - 80}, ${summaryStartY})">
-      <g transform="translate(${graphWidth + 10}, 0)">
-        <text y="10" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
-        <text y="${graphHeight / 2 + 4}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
-        <text y="${graphHeight}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">0</text>
-      </g>
-      <defs>
-        <linearGradient id="headerAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:${theme.accent};stop-opacity:0.5" />
-          <stop offset="100%" style="stop-color:${theme.accent};stop-opacity:0.05" />
-        </linearGradient>
-      </defs>
-      <path d="${areaPath}" fill="url(#headerAreaGradient)" />
-      <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <g transform="translate(0, ${graphHeight + 14})">
-        ${monthlyData.filter((_, i) => i % 4 === 0 || i === monthlyData.length - 1).map((data, idx, arr) => {
-          const originalIdx = monthlyData.indexOf(data);
-          return `<text x="${(originalIdx / Math.max(monthlyData.length - 1, 1)) * graphWidth}" y="0" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
-        }).join("")}
+        <defs>
+          <linearGradient id="miniAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:${theme.accent};stop-opacity:0.5" />
+            <stop offset="100%" style="stop-color:${theme.accent};stop-opacity:0.05" />
+          </linearGradient>
+        </defs>
+        <path d="${areaPath}" fill="url(#miniAreaGradient)" />
+        <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(0, ${graphHeight + 14})">
+          ${last7Months.filter((_, i) => i % 2 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
+            const originalIdx = last7Months.indexOf(data);
+            return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
+          }).join("")}
+        </g>
       </g>
     </g>
   ` : "";
 
-  const contentHeight = Math.max(summaryHeight, headerChartHeight);
-  const totalHeight = profileHeight + (showProfile ? 16 : 0) + contentHeight + 10;
+  const totalHeight = profileHeight + (showProfile ? 16 : 0) + 178 + 10;
 
   return {
-    svg: `<g transform="translate(0, ${startY})">${profileSvg}${summarySvg}${headerChartSvg}</g>`,
+    svg: `<g transform="translate(0, ${startY})">${profileSvg}${devScoreCard}${miniChartSvg}</g>`,
     height: totalHeight
   };
+}
+
+function renderDeveloperMetric(label: string, value: string, current: number, max: number, color: string, y: number): string {
+  const percentage = Math.min((current / max) * 100, 100);
+  const barWidth = Math.min(percentage * 3.29, 329); // 329 is max width
+
+  return `
+    <g transform="translate(24, ${y})">
+      <text x="0" y="10" font-size="12" fill="${theme.text}" font-family="${FONT_FAMILY}">${label}</text>
+      <text x="329" y="10" text-anchor="end" font-size="12" font-weight="600" fill="${theme.text}" font-family="${FONT_FAMILY}">${value}</text>
+      <rect x="0" y="16" width="329" height="4" rx="2" fill="${theme.border}"/>
+      <rect x="0" y="16" width="${barWidth}" height="4" rx="2" fill="${color}"/>
+    </g>
+  `;
+}
+
+function formatNumber(num: number): string {
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'k';
+  }
+  return num.toString();
 }
 
 function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number, startX: number = 40): { svg: string; height: number } {
