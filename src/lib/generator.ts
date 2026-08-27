@@ -65,13 +65,13 @@ function calculateGrade(stats: GitHubStats): { grade: string; color: string } {
 
 function renderDeveloperMetric(theme: ThemeColors, label: string, value: string, current: number, max: number, color: string, y: number): string {
   const percentage = Math.min((current / max) * 100, 100);
-  const barWidth = Math.min(percentage * 3.29, 329);
+  const barWidth = (percentage / 100) * 422; // 422 = full width of container (470 - 24 - 24)
 
   return `
     <g transform="translate(24, ${y})">
       <text x="0" y="10" font-size="12" fill="${theme.text}" font-family="${FONT_FAMILY}">${label}</text>
-      <text x="329" y="10" text-anchor="end" font-size="12" font-weight="600" fill="${theme.text}" font-family="${FONT_FAMILY}">${value}</text>
-      <rect x="0" y="16" width="329" height="4" rx="2" fill="${theme.border}"/>
+      <text x="422" y="10" text-anchor="end" font-size="12" font-weight="600" fill="${theme.text}" font-family="${FONT_FAMILY}">${value}</text>
+      <rect x="0" y="16" width="422" height="4" rx="2" fill="${theme.border}"/>
       <rect x="0" y="16" width="${barWidth}" height="4" rx="2" fill="${color}"/>
     </g>
   `;
@@ -128,7 +128,7 @@ function renderHeaderSection(
       <g transform="translate(${startX}, ${currentY})">
         <rect x="0" y="0" width="470" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(24, 16)">
-          ${renderIcon("activity", 0, -1, theme.accent, 16)}
+          ${renderIcon("zap", 0, -1, theme.accent, 16)}
           <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
         </g>
         ${renderDeveloperMetric(theme, "Contribution Streak", `${stats.currentStreak.count} days`, stats.currentStreak.count, 365, "#58a6ff", 48)}
@@ -145,7 +145,7 @@ function renderHeaderSection(
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 220;
-    const graphHeight = 60;
+    const graphHeight = 70;
     const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
     const areaPoints: string[] = [];
@@ -179,9 +179,10 @@ function renderHeaderSection(
           <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
         </g>
         <g transform="translate(24, 46)">
-          <!-- Y-axis labels on the left -->
+          <!-- Y-axis labels (4 labels) -->
           <text x="0" y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${maxCount}</text>
-          <text x="0" y="${graphHeight / 2 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount / 2)}</text>
+          <text x="0" y="${graphHeight / 3 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount * 2 / 3)}</text>
+          <text x="0" y="${graphHeight * 2 / 3 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount / 3)}</text>
           <text x="0" y="${graphHeight + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">0</text>
           <defs>
             <linearGradient id="miniAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
