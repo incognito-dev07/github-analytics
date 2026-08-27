@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
   const showStats = searchParams.get('stats') !== 'false';
   const showHeader = searchParams.get('header') !== 'false';
   const showProfile = searchParams.get('profile') !== 'false';
+  const showDevScore = searchParams.get('devscore') !== 'false';
 
   const hideLangs = searchParams.get('hide_langs') || '';
   const hiddenLanguages = hideLangs.split(',').map(l => l.trim()).filter(Boolean);
@@ -34,6 +35,7 @@ export async function GET(request: NextRequest) {
       showStats,
       showHeader,
       showProfile,
+      showDevScore,
     });
 
     return new NextResponse(svg, {
