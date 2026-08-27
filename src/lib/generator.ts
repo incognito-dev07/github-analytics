@@ -116,7 +116,7 @@ function renderHeaderSection(
   ` : "";
 
   const profileHeight = showProfile ? 36 : 0;
-  const startX = 48;
+  const startX = 45;
   let currentY = profileHeight + (showProfile ? 24 : 0);
 
   let headerSvg = '';
@@ -145,7 +145,7 @@ function renderHeaderSection(
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 200;
-    const graphHeight = 90;
+    const graphHeight = 95;
     const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
     const areaPoints: string[] = [];
@@ -196,7 +196,7 @@ function renderHeaderSection(
           </defs>
           <path d="${areaPath}" fill="url(#miniAreaGradient)" />
           <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <g transform="translate(30, ${graphHeight + 12})">
+          <g transform="translate(25, ${graphHeight + 12})">
             ${labelMonths.map((data, idx) => {
               const originalIdx = last10Months.indexOf(data);
               return `<text x="${(originalIdx / Math.max(last10Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
@@ -234,7 +234,7 @@ function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number,
 
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
-      <rect x="0" y="0" width="377" height="210" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
       <g transform="translate(24, 24)">
         ${renderIcon("activity", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">General Statistics</text>
@@ -245,7 +245,7 @@ function renderStatsCard(stats: GitHubStats, theme: ThemeColors, startY: number,
         <circle cx="36" cy="36" r="26" fill="${gradeColor}" opacity="0.1"/>
         <text x="36" y="41" text-anchor="middle" font-size="22" font-weight="700" fill="${gradeColor}" font-family="${FONT_FAMILY}" letter-spacing="0.5">${grade}</text>
       </g>
-      <text x="323" y="176" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
+      <text x="323" y="160" text-anchor="middle" font-size="12" font-weight="500" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Rating</text>
     </g>`,
     height: 210
   };
@@ -295,7 +295,7 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
 
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
-      <rect x="0" y="0" width="377" height="210" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
       <g transform="translate(24, 24)">
         ${renderIcon("code", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Primary Languages</text>
