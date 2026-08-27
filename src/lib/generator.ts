@@ -65,7 +65,7 @@ function calculateGrade(stats: GitHubStats): { grade: string; color: string } {
 
 function renderDeveloperMetric(theme: ThemeColors, label: string, value: string, current: number, max: number, color: string, y: number): string {
   const percentage = Math.min((current / max) * 100, 100);
-  const barWidth = (percentage / 100) * 422; // 422 = full width of container (470 - 24 - 24)
+  const barWidth = (percentage / 100) * 422;
 
   return `
     <g transform="translate(24, ${y})">
@@ -122,7 +122,6 @@ function renderHeaderSection(
   let headerSvg = '';
   let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
-  // Developer Score Card (60%)
   if (showDevScore) {
     const devScoreCard = `
       <g transform="translate(${startX}, ${currentY})">
@@ -141,7 +140,6 @@ function renderHeaderSection(
     totalHeight = Math.max(totalHeight, currentY + 178 + 10);
   }
 
-  // Monthly Chart Card (40%)
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 190;
@@ -179,7 +177,6 @@ function renderHeaderSection(
           <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
         </g>
         <g transform="translate(24, 46)">
-          <!-- Y-axis labels (4 labels) -->
           <text x="0" y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${maxCount}</text>
           <text x="0" y="${graphHeight / 3 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount * 2 / 3)}</text>
           <text x="0" y="${graphHeight * 2 / 3 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount / 3)}</text>
@@ -496,3 +493,4 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
   ${graphSection.svg}
 </svg>
   `.trim();
+}
