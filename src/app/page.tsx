@@ -284,7 +284,7 @@ export default function Home() {
                 <label>
                   <input type="checkbox" checked={showHeader} onChange={(e) => setShowHeader(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">Monthly Chart</span>
+                  <span className="label-text">Developer Score &amp; Monthly Chart</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />

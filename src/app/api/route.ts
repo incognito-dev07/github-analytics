@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
   const showStreak = searchParams.get('streak') !== 'false';
   const showStats = searchParams.get('stats') !== 'false';
   const showHeader = searchParams.get('header') !== 'false';
-  const showSummary = searchParams.get('summary') !== 'false';
   const showProfile = searchParams.get('profile') !== 'false';
 
   const hideLangs = searchParams.get('hide_langs') || '';
@@ -34,7 +33,6 @@ export async function GET(request: NextRequest) {
       showStreak,
       showStats,
       showHeader,
-      showSummary,
       showProfile,
     });
 
