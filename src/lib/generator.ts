@@ -65,13 +65,13 @@ function calculateGrade(stats: GitHubStats): { grade: string; color: string } {
 
 function renderDeveloperMetric(theme: ThemeColors, label: string, value: string, current: number, max: number, color: string, y: number): string {
   const percentage = Math.min((current / max) * 100, 100);
-  const barWidth = Math.min(percentage * 2.82, 282);
+  const barWidth = Math.min(percentage * 3.29, 329);
 
   return `
-    <g transform="translate(0, ${y})">
+    <g transform="translate(24, ${y})">
       <text x="0" y="10" font-size="12" fill="${theme.text}" font-family="${FONT_FAMILY}">${label}</text>
-      <text x="282" y="10" text-anchor="end" font-size="12" font-weight="600" fill="${theme.text}" font-family="${FONT_FAMILY}">${value}</text>
-      <rect x="0" y="16" width="282" height="4" rx="2" fill="${theme.border}"/>
+      <text x="329" y="10" text-anchor="end" font-size="12" font-weight="600" fill="${theme.text}" font-family="${FONT_FAMILY}">${value}</text>
+      <rect x="0" y="16" width="329" height="4" rx="2" fill="${theme.border}"/>
       <rect x="0" y="16" width="${barWidth}" height="4" rx="2" fill="${color}"/>
     </g>
   `;
@@ -141,25 +141,29 @@ function renderHeaderSection(
     totalHeight = Math.max(totalHeight, currentY + 178 + 10);
   }
 
-  // Monthly Chart Card (40%) - only if showHeader is true
+  // Monthly Chart Card (40%)
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 220;
     const graphHeight = 60;
     const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
-    const areaPoints: string[] = [`M 0 ${graphHeight}`];
+    const areaPoints: string[] = [];
     const linePoints: string[] = [];
 
     const last7Months = monthlyData.slice(-7);
 
     last7Months.forEach((data, i) => {
-      const x = (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
+      const x = 30 + (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
       const y = graphHeight - (data.count / maxCount) * (graphHeight - 8);
       areaPoints.push(`L ${x} ${y}`);
       linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
     });
-    areaPoints.push(`L ${graphWidth} ${graphHeight} Z`);
+
+    const firstX = 30 + 0;
+    const lastX = 30 + graphWidth;
+    areaPoints.unshift(`M ${firstX} ${graphHeight}`);
+    areaPoints.push(`L ${lastX} ${graphHeight} Z`);
 
     const areaPath = areaPoints.join(" ");
     const linePath = linePoints.join(" ");
@@ -175,11 +179,10 @@ function renderHeaderSection(
           <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
         </g>
         <g transform="translate(24, 46)">
-          <g transform="translate(${graphWidth + 10}, 0)">
-            <text y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
-            <text y="${graphHeight / 2 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
-            <text y="${graphHeight}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">0</text>
-          </g>
+          <!-- Y-axis labels on the left -->
+          <text x="0" y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${maxCount}</text>
+          <text x="0" y="${graphHeight / 2 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount / 2)}</text>
+          <text x="0" y="${graphHeight + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">0</text>
           <defs>
             <linearGradient id="miniAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" style="stop-color:${theme.accent};stop-opacity:0.5" />
@@ -188,7 +191,7 @@ function renderHeaderSection(
           </defs>
           <path d="${areaPath}" fill="url(#miniAreaGradient)" />
           <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <g transform="translate(0, ${graphHeight + 12})">
+          <g transform="translate(30, ${graphHeight + 12})">
             ${last7Months.filter((_, i) => i % 2 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
               const originalIdx = last7Months.indexOf(data);
               return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
