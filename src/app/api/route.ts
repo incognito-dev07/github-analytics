@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
 
   const showGraph = searchParams.get('graph') !== 'false';
   const showLanguages = searchParams.get('languages') !== 'false';
-  const showStreak = searchParams.get('streak') !== 'false';
   const showStats = searchParams.get('stats') !== 'false';
   const showHeader = searchParams.get('header') !== 'false';
   const showProfile = searchParams.get('profile') !== 'false';
@@ -31,7 +30,6 @@ export async function GET(request: NextRequest) {
       theme: themeColors,
       showGraph,
       showLanguages,
-      showStreak,
       showStats,
       showHeader,
       showProfile,

@@ -122,6 +122,7 @@ function renderHeaderSection(
   let headerSvg = '';
   let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
+  // Developer Score Card (60%) - Comes first
   if (showDevScore) {
     const devScoreCard = `
       <g transform="translate(${startX}, ${currentY})">
@@ -140,15 +141,17 @@ function renderHeaderSection(
     totalHeight = Math.max(totalHeight, currentY + 178 + 10);
   }
 
+  // Monthly Chart Card (40%) - Comes after Developer Score
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
-    const graphWidth = 190;
-    const graphHeight = 85;
+    const graphWidth = 200;
+    const graphHeight = 90;
     const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
     const areaPoints: string[] = [];
     const linePoints: string[] = [];
 
+    // Get last 7 months (Nov 25, Dec 25, Jan 26, Feb 26, Mar 26, Apr 26, May 26, Jun 26, Jul 26, Aug 26)
     const last7Months = monthlyData.slice(-7);
 
     last7Months.forEach((data, i) => {
@@ -168,6 +171,10 @@ function renderHeaderSection(
 
     const chartX = showDevScore ? startX + 470 + 16 : startX;
     const chartWidth = showDevScore ? 280 : 770;
+
+    // Labels: Nov 25, Feb 26, May 26, Aug 26 (every 3 months)
+    const labelIndices = [0, 3, 6];
+    const labelMonths = last7Months.filter((_, i) => labelIndices.includes(i));
 
     const miniChartSvg = `
       <g transform="translate(${chartX}, ${currentY})">
@@ -190,7 +197,7 @@ function renderHeaderSection(
           <path d="${areaPath}" fill="url(#miniAreaGradient)" />
           <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <g transform="translate(30, ${graphHeight + 12})">
-            ${last7Months.filter((_, i) => i % 3 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
+            ${labelMonths.map((data, idx) => {
               const originalIdx = last7Months.indexOf(data);
               return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
             }).join("")}
@@ -304,70 +311,6 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   };
 }
 
-function renderStreakSection(stats: GitHubStats, theme: ThemeColors, startY: number, cardWidth: number): { svg: string; height: number } {
-  const { currentStreak, longestStreak, totalContributionsAllTime, accountCreatedAt } = stats;
-
-  const circleRadius = 32;
-  const strokeWidth = 5;
-  const innerCardWidth = cardWidth - 80;
-  const cardWidth3 = (innerCardWidth - 32) / 3;
-
-  return {
-    svg: `<g transform="translate(40, ${startY})">
-      <g transform="translate(0, 5)">
-        <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-        <g transform="translate(${cardWidth3 / 2}, 24)">
-          ${renderIcon("contribution", -10, 0, theme.accent, 20)}
-        </g>
-        <text x="${cardWidth3 / 2}" y="74" text-anchor="middle" font-size="26" font-weight="700" fill="${theme.accent}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-          ${totalContributionsAllTime.toLocaleString()}
-        </text>
-        <text x="${cardWidth3 / 2}" y="98" text-anchor="middle" font-size="12" font-weight="600" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-          Total Contributions
-        </text>
-        <text x="${cardWidth3 / 2}" y="120" text-anchor="middle" font-size="10" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" opacity="0.7" letter-spacing="0.2">
-          ${formatDateFull(accountCreatedAt)} - Present
-        </text>
-      </g>
-      <g transform="translate(${cardWidth3 + 16}, 5)">
-        <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-        <g transform="translate(${cardWidth3 / 2}, 52)">
-          <circle cx="0" cy="0" r="${circleRadius}" fill="none" stroke="${theme.border}" stroke-width="${strokeWidth}" opacity="0.4"/>
-          <circle cx="0" cy="0" r="${circleRadius}" fill="none" stroke="${theme.accent}" stroke-width="${strokeWidth}" stroke-dasharray="${2 * Math.PI * circleRadius}" stroke-dashoffset="${2 * Math.PI * circleRadius * (1 - Math.min(currentStreak.count / 30, 1))}" transform="rotate(-90)" stroke-linecap="round"/>
-          <g transform="translate(-8, ${-circleRadius - 6})">
-            ${renderIcon("fire", 0, 0, "#ff6b35", 18)}
-          </g>
-          <text x="0" y="10" text-anchor="middle" font-size="22" font-weight="700" fill="${theme.text}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-            ${currentStreak.count}
-          </text>
-        </g>
-        <text x="${cardWidth3 / 2}" y="108" text-anchor="middle" font-size="12" font-weight="600" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-          Current Streak
-        </text>
-        <text x="${cardWidth3 / 2}" y="126" text-anchor="middle" font-size="10" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" opacity="0.7" letter-spacing="0.2">
-          ${currentStreak.startDate ? formatDateRange(currentStreak.startDate, currentStreak.endDate) : "No active streak"}
-        </text>
-      </g>
-      <g transform="translate(${(cardWidth3 + 16) * 2}, 5)">
-        <rect x="0" y="0" width="${cardWidth3}" height="140" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-        <g transform="translate(${cardWidth3 / 2}, 24)">
-          ${renderIcon("trophy", -8, 0, theme.accentSecondary, 18)}
-        </g>
-        <text x="${cardWidth3 / 2}" y="74" text-anchor="middle" font-size="26" font-weight="700" fill="${theme.accentSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-          ${longestStreak.count}
-        </text>
-        <text x="${cardWidth3 / 2}" y="98" text-anchor="middle" font-size="12" font-weight="600" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" letter-spacing="0.3">
-          Longest Streak
-        </text>
-        <text x="${cardWidth3 / 2}" y="120" text-anchor="middle" font-size="10" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" opacity="0.7" letter-spacing="0.2">
-          ${longestStreak.startDate ? formatDateRange(longestStreak.startDate, longestStreak.endDate) : "N/A"}
-        </text>
-      </g>
-    </g>`,
-    height: 160
-  };
-}
-
 function renderContributionLineGraph(stats: GitHubStats, theme: ThemeColors, startY: number, cardWidth: number): { svg: string; height: number } {
   const { contributionData } = stats;
 
@@ -473,9 +416,7 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
   const statsAndLangsHeight = Math.max(statsCard.height, languagesCard.height);
   currentY += statsAndLangsHeight + 3;
 
-  const streakSection = options.showStreak !== false ? renderStreakSection(stats, theme, currentY, cardWidth) : { svg: "", height: 0 };
-  currentY += streakSection.height + 3;
-
+  // Streak Monitor removed - skip to Contribution Graph
   const graphSection = options.showGraph !== false ? renderContributionLineGraph(stats, theme, currentY, cardWidth) : { svg: "", height: 0 };
   currentY += graphSection.height;
 
@@ -489,7 +430,6 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
   ${headerSection.svg}
   ${statsCard.svg}
   ${languagesCard.svg}
-  ${streakSection.svg}
   ${graphSection.svg}
 </svg>
   `.trim();

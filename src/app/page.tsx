@@ -8,7 +8,6 @@ export default function Home() {
   const [selectedTheme, setSelectedTheme] = useState('github_dark');
   const [showGraph, setShowGraph] = useState(true);
   const [showLanguages, setShowLanguages] = useState(true);
-  const [showStreak, setShowStreak] = useState(true);
   const [showStats, setShowStats] = useState(true);
   const [showHeader, setShowHeader] = useState(true);
   const [showProfile, setShowProfile] = useState(true);
@@ -31,7 +30,6 @@ export default function Home() {
     params.append('theme', selectedTheme);
     if (!showGraph) params.append('graph', 'false');
     if (!showLanguages) params.append('languages', 'false');
-    if (!showStreak) params.append('streak', 'false');
     if (!showStats) params.append('stats', 'false');
     if (!showHeader) params.append('header', 'false');
     if (!showProfile) params.append('profile', 'false');
@@ -55,7 +53,6 @@ export default function Home() {
       g.selectedTheme !== selectedTheme ||
       g.showGraph !== showGraph ||
       g.showLanguages !== showLanguages ||
-      g.showStreak !== showStreak ||
       g.showStats !== showStats ||
       g.showHeader !== showHeader ||
       g.showProfile !== showProfile ||
@@ -159,7 +156,6 @@ export default function Home() {
       selectedTheme,
       showGraph,
       showLanguages,
-      showStreak,
       showStats,
       showHeader,
       showProfile,
@@ -173,7 +169,6 @@ export default function Home() {
     params.append('theme', selectedTheme);
     if (!showGraph) params.append('graph', 'false');
     if (!showLanguages) params.append('languages', 'false');
-    if (!showStreak) params.append('streak', 'false');
     if (!showStats) params.append('stats', 'false');
     if (!showHeader) params.append('header', 'false');
     if (!showProfile) params.append('profile', 'false');
@@ -217,7 +212,7 @@ export default function Home() {
 
   useEffect(() => {
     renderPreview();
-  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStreak, showStats, showHeader, showProfile, showDevScore]);
+  }, [generatedUsername, isGenerating, hasError, hasLoaded, refreshKey, selectedTheme, showGraph, showLanguages, showStats, showHeader, showProfile, showDevScore]);
 
   return (
     <div id="root">
@@ -287,14 +282,14 @@ export default function Home() {
                   <span className="label-text">Developer Name</span>
                 </label>
                 <label>
-                  <input type="checkbox" checked={showHeader} onChange={(e) => setShowHeader(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Monthly Chart</span>
-                </label>
-                <label>
                   <input type="checkbox" checked={showDevScore} onChange={(e) => setShowDevScore(e.target.checked)} />
                   <span className="checkmark"></span>
                   <span className="label-text">Developer Score</span>
+                </label>
+                <label>
+                  <input type="checkbox" checked={showHeader} onChange={(e) => setShowHeader(e.target.checked)} />
+                  <span className="checkmark"></span>
+                  <span className="label-text">Monthly Chart</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />
@@ -305,11 +300,6 @@ export default function Home() {
                   <input type="checkbox" checked={showLanguages} onChange={(e) => setShowLanguages(e.target.checked)} />
                   <span className="checkmark"></span>
                   <span className="label-text">Primary Languages</span>
-                </label>
-                <label>
-                  <input type="checkbox" checked={showStreak} onChange={(e) => setShowStreak(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Streak Monitor</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showGraph} onChange={(e) => setShowGraph(e.target.checked)} />
