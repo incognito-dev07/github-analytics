@@ -122,7 +122,7 @@ function renderHeaderSection(
   let headerSvg = '';
   let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
-  // Developer Score Card (60%)
+  // Developer Score Card (60%) - 4 metrics only
   if (showDevScore) {
     const devScoreCard = `
       <g transform="translate(${startX}, ${currentY})">
@@ -131,10 +131,10 @@ function renderHeaderSection(
           ${renderIcon("zap", 0, -1, theme.accent, 18)}
           <text x="26" y="12" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
         </g>
-        ${renderDeveloperMetric(theme, "Contribution Streak", `${stats.currentStreak.count} days`, stats.currentStreak.count, 365, "#58a6ff", 48)}
+        ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 48)}
         ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
-        ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
-        ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 10, "#3fb950", 138)}
+        ${renderDeveloperMetric(theme, "Activity Consistency", `${stats.totalContributionsAllTime.toLocaleString()} contribs`, stats.totalContributionsAllTime, 10000, "#a371f7", 108)}
+        ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
       </g>
     `;
     headerSvg += devScoreCard;
@@ -151,18 +151,17 @@ function renderHeaderSection(
     const areaPoints: string[] = [];
     const linePoints: string[] = [];
 
-    // Get last 10 months
     const last10Months = monthlyData.slice(-10);
 
     last10Months.forEach((data, i) => {
-      const x = 30 + (i / Math.max(last10Months.length - 1, 1)) * graphWidth;
+      const x = 20 + (i / Math.max(last10Months.length - 1, 1)) * graphWidth;
       const y = graphHeight - (data.count / maxCount) * (graphHeight - 6);
       areaPoints.push(`L ${x} ${y}`);
       linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
     });
 
-    const firstX = 20 + 0;
-    const lastX = 25 + graphWidth;
+    const firstX = 30 + 0;
+    const lastX = 30 + graphWidth;
     areaPoints.unshift(`M ${firstX} ${graphHeight}`);
     areaPoints.push(`L ${lastX} ${graphHeight} Z`);
 
@@ -172,7 +171,6 @@ function renderHeaderSection(
     const chartX = showDevScore ? startX + 470 + 16 : startX;
     const chartWidth = showDevScore ? 280 : 770;
 
-    // Labels: Nov, Feb, May, Aug (indices 0, 3, 6, 9 for 10 months)
     const labelIndices = [0, 3, 6, 9];
     const labelMonths = last10Months.filter((_, i) => labelIndices.includes(i));
 
@@ -265,8 +263,8 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   let currentX = 0;
   const segments: { x: number; width: number; color: string }[] = [];
 
-  const topLangs = languages.slice(0, 8);
-  const validLangs = topLangs.filter((lang) => (lang.percentage / 100) * barWidth > 0.5);
+  // Show ALL languages (no cap)
+  const validLangs = languages.filter((lang) => (lang.percentage / 100) * barWidth > 0.5);
   const totalPercentage = validLangs.reduce((sum, lang) => sum + lang.percentage, 0);
 
   for (let index = 0; index < validLangs.length; index++) {
@@ -280,8 +278,9 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
 
   const segmentsSvg = segments.map((seg) => `<rect x="${seg.x}" y="0" width="${seg.width}" height="${barHeight}" fill="${seg.color}"/>`).join("");
 
-  const leftColumn = topLangs.filter((_, i) => i % 2 === 0);
-  const rightColumn = topLangs.filter((_, i) => i % 2 === 1);
+  // Split into two columns for display
+  const leftColumn = validLangs.filter((_, i) => i % 2 === 0);
+  const rightColumn = validLangs.filter((_, i) => i % 2 === 1);
 
   const leftLangsSvg = leftColumn.map((lang, index) => {
     const y = index * 27;
@@ -295,7 +294,7 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
 
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
-      <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+      <rect x="0" y="0" width="377" height="${Math.max(84 + (Math.ceil(validLangs.length / 2) * 27), 90)}" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
       <g transform="translate(24, 24)">
         ${renderIcon("code", 0, -1, theme.accent, 18)}
         <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Primary Languages</text>
@@ -307,7 +306,7 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
       </g>
       <g transform="translate(24, 84)">${leftLangsSvg}${rightLangsSvg}</g>
     </g>`,
-    height: 210
+    height: Math.max(84 + (Math.ceil(validLangs.length / 2) * 27), 90) + 20
   };
 }
 
@@ -416,7 +415,6 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
   const statsAndLangsHeight = Math.max(statsCard.height, languagesCard.height);
   currentY += statsAndLangsHeight + 3;
 
-  // Streak Monitor removed - skip to Contribution Graph
   const graphSection = options.showGraph !== false ? renderContributionLineGraph(stats, theme, currentY, cardWidth) : { svg: "", height: 0 };
   currentY += graphSection.height;
 
