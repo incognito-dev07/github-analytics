@@ -223,14 +223,14 @@ export async function fetchGitHubStats(username: string, hiddenLanguages: string
         ...l,
         percentage: totalLangSize > 0 ? (l.size / totalLangSize) * 100 : 0
       }))
-      .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, 8);
+      .sort((a, b) => b.percentage - a.percentage);
 
     languages = renameGoToGolang(languages);
 
     const contributionDays: ContributionDay[] = user.contributionsCollection.contributionCalendar.weeks
       .flatMap((w) => w.contributionDays);
     const streaks = calculateStreaks(contributionDays);
+    const activeDays = contributionDays.filter(d => d.contributionCount > 0).length;
 
     const monthMap = new Map<string, number>();
     for (const d of contributionDays) {
@@ -282,6 +282,7 @@ export async function fetchGitHubStats(username: string, hiddenLanguages: string
       monthlyContributions,
       rank,
       rankPercentile: 0,
+      activeDays,
     };
   } catch (error) {
     console.error('GitHub API Error:', error);
