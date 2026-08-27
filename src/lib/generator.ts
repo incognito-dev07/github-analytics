@@ -145,7 +145,7 @@ function renderHeaderSection(
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 200;
-    const graphHeight = 95;
+    const graphHeight = 100;
     const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
     const areaPoints: string[] = [];
@@ -183,7 +183,7 @@ function renderHeaderSection(
           ${renderIcon("calendar", 0, -1, theme.accent, 16)}
           <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
         </g>
-        <g transform="translate(24, 46)">
+        <g transform="translate(28, 46)">
           <text x="0" y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${maxCount}</text>
           <text x="0" y="${graphHeight / 3 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount * 2 / 3)}</text>
           <text x="0" y="${graphHeight * 2 / 3 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${Math.round(maxCount / 3)}</text>
