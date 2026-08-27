@@ -286,16 +286,16 @@ export default function Home() {
                   <span className="checkmark"></span>
                   <span className="label-text">Monthly Chart</span>
                 </label>
-  <label>
-    <input type="checkbox" checked={showDevScore} onChange={(e) => setShowDevScore(e.target.checked)} />
-    <span className="checkmark"></span>
-    <span className="label-text">Developer Score</span>
-  </label>
-  <label>
-    <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />
-    <span className="checkmark"></span>
-    <span className="label-text">General Statistics</span>
-  </label>
+                <label>
+                  <input type="checkbox" checked={showDevScore} onChange={(e) => setShowDevScore(e.target.checked)} />
+                  <span className="checkmark"></span>
+                  <span className="label-text">Developer Score</span>
+                </label>
+                <label>
+                  <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />
+                  <span className="checkmark"></span>
+                  <span className="label-text">General Statistics</span>
+                </label>
   <label>
     <input type="checkbox" checked={showLanguages} onChange={(e) => setShowLanguages(e.target.checked)} />
     <span className="checkmark"></span>
