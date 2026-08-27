@@ -294,17 +294,17 @@ export default function Home() {
                 <label>
                   <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">General Statistics</span>
+                  <span className="label-text">General Stats</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showLanguages} onChange={(e) => setShowLanguages(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">Primary Languages</span>
+                  <span className="label-text">Core Languages</span>
                 </label>
                 <label>
                   <input type="checkbox" checked={showGraph} onChange={(e) => setShowGraph(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">Contribution Graph</span>
+                  <span className="label-text">Contribution Act</span>
                 </label>
               </div>
             </div>

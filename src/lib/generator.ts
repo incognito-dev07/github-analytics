@@ -178,7 +178,7 @@ function renderHeaderSection(
       <g transform="translate(${chartX}, ${currentY})">
         <rect x="0" y="0" width="${chartWidth}" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(24, 16)">
-          ${renderIcon("calendar", 0, -1, theme.accent, 16)}
+          ${renderIcon("calendar", 0, -1, theme.accent, 14)}
           <text x="26" y="12" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
         </g>
         <g transform="translate(32, 46)">
