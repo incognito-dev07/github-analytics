@@ -12,6 +12,7 @@ interface CardOptions {
   showHeader?: boolean;
   showSummary?: boolean;
   showProfile?: boolean;
+  showDevScore?: boolean;
 }
 
 function formatDateRange(startDateStr: string, endDateStr: string): string {
@@ -64,7 +65,7 @@ function calculateGrade(stats: GitHubStats): { grade: string; color: string } {
 
 function renderDeveloperMetric(theme: ThemeColors, label: string, value: string, current: number, max: number, color: string, y: number): string {
   const percentage = Math.min((current / max) * 100, 100);
-  const barWidth = Math.min(percentage * 2.82, 282); // 282 is 60% of 470
+  const barWidth = Math.min(percentage * 2.82, 282);
 
   return `
     <g transform="translate(0, ${y})">
@@ -92,6 +93,7 @@ function renderHeaderSection(
     showProfile?: boolean;
     showSummary?: boolean;
     showHeader?: boolean;
+    showDevScore?: boolean;
   }
 ): { svg: string; height: number } {
   const { user, monthlyContributions } = stats;
@@ -99,31 +101,11 @@ function renderHeaderSection(
 
   const showProfile = options.showProfile !== false;
   const showHeader = options.showHeader !== false;
+  const showDevScore = options.showDevScore !== false;
 
-  if (!showProfile && !showHeader) {
+  if (!showProfile && !showHeader && !showDevScore) {
     return { svg: "", height: 0 };
   }
-
-  const monthlyData = monthlyContributions || [];
-  const graphWidth = 280;
-  const graphHeight = 70;
-  const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
-
-  const areaPoints: string[] = [`M 0 ${graphHeight}`];
-  const linePoints: string[] = [];
-
-  const last7Months = monthlyData.slice(-7);
-
-  last7Months.forEach((data, i) => {
-    const x = (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
-    const y = graphHeight - (data.count / maxCount) * (graphHeight - 10);
-    areaPoints.push(`L ${x} ${y}`);
-    linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
-  });
-  areaPoints.push(`L ${graphWidth} ${graphHeight} Z`);
-
-  const areaPath = areaPoints.join(" ");
-  const linePath = linePoints.join(" ");
 
   const profileSvg = showProfile ? `
     <g transform="translate(${cardWidth / 2}, 20)">
@@ -134,58 +116,93 @@ function renderHeaderSection(
   ` : "";
 
   const profileHeight = showProfile ? 36 : 0;
+  const startX = 48;
+  let currentY = profileHeight + (showProfile ? 24 : 0);
 
-  // Developer Score Card (60%) - width 470, starts at x=48
-  const devScoreCard = `
-    <g transform="translate(48, ${profileHeight + (showProfile ? 24 : 0)})">
-      <rect x="0" y="0" width="470" height="210" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 24)">
-        ${renderIcon("activity", 0, -1, theme.accent, 18)}
-        <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
-      </g>
-      ${renderDeveloperMetric(theme, "Contribution Streak", `${stats.currentStreak.count} days`, stats.currentStreak.count, 365, "#58a6ff", 56)}
-      ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 86)}
-      ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 116)}
-      ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 10, "#3fb950", 146)}
-    </g>
-  `;
+  let headerSvg = '';
+  let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
-  // Monthly Chart Card (40%) - width 280, starts at x=48+470+16=534
-  const miniChartSvg = showHeader ? `
-    <g transform="translate(${48 + 470 + 16}, ${profileHeight + (showProfile ? 24 : 0)})">
-      <rect x="0" y="0" width="280" height="210" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
-      <g transform="translate(24, 24)">
-        ${renderIcon("calendar", 0, -1, theme.accent, 18)}
-        <text x="28" y="13" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
-      </g>
-      <g transform="translate(24, 56)">
-        <g transform="translate(${graphWidth + 10}, 0)">
-          <text y="10" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
-          <text y="${graphHeight / 2 + 4}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
-          <text y="${graphHeight}" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">0</text>
+  // Developer Score Card (60%)
+  if (showDevScore) {
+    const devScoreCard = `
+      <g transform="translate(${startX}, ${currentY})">
+        <rect x="0" y="0" width="470" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+        <g transform="translate(24, 16)">
+          ${renderIcon("activity", 0, -1, theme.accent, 16)}
+          <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
         </g>
-        <defs>
-          <linearGradient id="miniAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:${theme.accent};stop-opacity:0.5" />
-            <stop offset="100%" style="stop-color:${theme.accent};stop-opacity:0.05" />
-          </linearGradient>
-        </defs>
-        <path d="${areaPath}" fill="url(#miniAreaGradient)" />
-        <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <g transform="translate(0, ${graphHeight + 14})">
-          ${last7Months.filter((_, i) => i % 2 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
-            const originalIdx = last7Months.indexOf(data);
-            return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="9" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
-          }).join("")}
+        ${renderDeveloperMetric(theme, "Contribution Streak", `${stats.currentStreak.count} days`, stats.currentStreak.count, 365, "#58a6ff", 48)}
+        ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
+        ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
+        ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 10, "#3fb950", 138)}
+      </g>
+    `;
+    headerSvg += devScoreCard;
+    totalHeight = Math.max(totalHeight, currentY + 178 + 10);
+  }
+
+  // Monthly Chart Card (40%) - only if showHeader is true
+  if (showHeader) {
+    const monthlyData = monthlyContributions || [];
+    const graphWidth = 220;
+    const graphHeight = 60;
+    const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
+
+    const areaPoints: string[] = [`M 0 ${graphHeight}`];
+    const linePoints: string[] = [];
+
+    const last7Months = monthlyData.slice(-7);
+
+    last7Months.forEach((data, i) => {
+      const x = (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
+      const y = graphHeight - (data.count / maxCount) * (graphHeight - 8);
+      areaPoints.push(`L ${x} ${y}`);
+      linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
+    });
+    areaPoints.push(`L ${graphWidth} ${graphHeight} Z`);
+
+    const areaPath = areaPoints.join(" ");
+    const linePath = linePoints.join(" ");
+
+    const chartX = showDevScore ? startX + 470 + 16 : startX;
+    const chartWidth = showDevScore ? 280 : 770;
+
+    const miniChartSvg = `
+      <g transform="translate(${chartX}, ${currentY})">
+        <rect x="0" y="0" width="${chartWidth}" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
+        <g transform="translate(24, 16)">
+          ${renderIcon("calendar", 0, -1, theme.accent, 16)}
+          <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
+        </g>
+        <g transform="translate(24, 46)">
+          <g transform="translate(${graphWidth + 10}, 0)">
+            <text y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${maxCount}</text>
+            <text y="${graphHeight / 2 + 4}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">${Math.round(maxCount / 2)}</text>
+            <text y="${graphHeight}" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}">0</text>
+          </g>
+          <defs>
+            <linearGradient id="miniAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:${theme.accent};stop-opacity:0.5" />
+              <stop offset="100%" style="stop-color:${theme.accent};stop-opacity:0.05" />
+            </linearGradient>
+          </defs>
+          <path d="${areaPath}" fill="url(#miniAreaGradient)" />
+          <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <g transform="translate(0, ${graphHeight + 12})">
+            ${last7Months.filter((_, i) => i % 2 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
+              const originalIdx = last7Months.indexOf(data);
+              return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
+            }).join("")}
+          </g>
         </g>
       </g>
-    </g>
-  ` : "";
-
-  const totalHeight = profileHeight + (showProfile ? 16 : 0) + 210 + 10;
+    `;
+    headerSvg += miniChartSvg;
+    totalHeight = Math.max(totalHeight, currentY + 178 + 10);
+  }
 
   return {
-    svg: `<g transform="translate(0, ${startY})">${profileSvg}${devScoreCard}${miniChartSvg}</g>`,
+    svg: `<g transform="translate(0, ${startY})">${profileSvg}${headerSvg}</g>`,
     height: totalHeight
   };
 }
@@ -433,6 +450,7 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
     showProfile: options.showProfile,
     showSummary: options.showSummary,
     showHeader: options.showHeader,
+    showDevScore: options.showDevScore,
   });
   currentY += headerSection.height + (headerSection.height > 0 ? 3 : 0);
 

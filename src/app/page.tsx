@@ -284,29 +284,34 @@ export default function Home() {
                 <label>
                   <input type="checkbox" checked={showHeader} onChange={(e) => setShowHeader(e.target.checked)} />
                   <span className="checkmark"></span>
-                  <span className="label-text">Developer Score &amp; Monthly Chart</span>
+                  <span className="label-text">Monthly Chart</span>
                 </label>
-                <label>
-                  <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">General Statistics</span>
-                </label>
-                <label>
-                  <input type="checkbox" checked={showLanguages} onChange={(e) => setShowLanguages(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Primary Languages</span>
-                </label>
-                <label>
-                  <input type="checkbox" checked={showStreak} onChange={(e) => setShowStreak(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Streak Monitor</span>
-                </label>
-                <label>
-                  <input type="checkbox" checked={showGraph} onChange={(e) => setShowGraph(e.target.checked)} />
-                  <span className="checkmark"></span>
-                  <span className="label-text">Contribution Graph</span>
-                </label>
-              </div>
+  <label>
+    <input type="checkbox" checked={showDevScore} onChange={(e) => setShowDevScore(e.target.checked)} />
+    <span className="checkmark"></span>
+    <span className="label-text">Developer Score</span>
+  </label>
+  <label>
+    <input type="checkbox" checked={showStats} onChange={(e) => setShowStats(e.target.checked)} />
+    <span className="checkmark"></span>
+    <span className="label-text">General Statistics</span>
+  </label>
+  <label>
+    <input type="checkbox" checked={showLanguages} onChange={(e) => setShowLanguages(e.target.checked)} />
+    <span className="checkmark"></span>
+    <span className="label-text">Primary Languages</span>
+  </label>
+  <label>
+    <input type="checkbox" checked={showStreak} onChange={(e) => setShowStreak(e.target.checked)} />
+    <span className="checkmark"></span>
+    <span className="label-text">Streak Monitor</span>
+  </label>
+  <label>
+    <input type="checkbox" checked={showGraph} onChange={(e) => setShowGraph(e.target.checked)} />
+    <span className="checkmark"></span>
+    <span className="label-text">Contribution Graph</span>
+  </label>
+</div>
             </div>
           </div>
         </div>
