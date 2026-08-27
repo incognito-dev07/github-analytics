@@ -128,8 +128,8 @@ function renderHeaderSection(
       <g transform="translate(${startX}, ${currentY})">
         <rect x="0" y="0" width="470" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(24, 16)">
-          ${renderIcon("zap", 0, -1, theme.accent, 16)}
-          <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
+          ${renderIcon("zap", 0, -1, theme.accent, 18)}
+          <text x="26" y="12" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Developer Score</text>
         </g>
         ${renderDeveloperMetric(theme, "Contribution Streak", `${stats.currentStreak.count} days`, stats.currentStreak.count, 365, "#58a6ff", 48)}
         ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
@@ -161,8 +161,8 @@ function renderHeaderSection(
       linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
     });
 
-    const firstX = 30 + 0;
-    const lastX = 30 + graphWidth;
+    const firstX = 20 + 0;
+    const lastX = 25 + graphWidth;
     areaPoints.unshift(`M ${firstX} ${graphHeight}`);
     areaPoints.push(`L ${lastX} ${graphHeight} Z`);
 
@@ -180,8 +180,8 @@ function renderHeaderSection(
       <g transform="translate(${chartX}, ${currentY})">
         <rect x="0" y="0" width="${chartWidth}" height="178" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
         <g transform="translate(24, 16)">
-          ${renderIcon("calendar", 0, -1, theme.accent, 16)}
-          <text x="26" y="12" font-size="14" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
+          ${renderIcon("calendar", 0, -1, theme.accent, 18)}
+          <text x="26" y="12" font-size="16" font-weight="600" fill="${theme.title}" font-family="${FONT_FAMILY}" letter-spacing="0.3">Monthly Chart</text>
         </g>
         <g transform="translate(32, 46)">
           <text x="0" y="8" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end">${maxCount}</text>
