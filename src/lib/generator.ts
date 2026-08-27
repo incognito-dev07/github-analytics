@@ -133,8 +133,8 @@ function renderHeaderSection(
         </g>
         ${renderDeveloperMetric(theme, "Contribution Days", `${stats.activeDays} days`, stats.activeDays, 365, "#58a6ff", 48)}
         ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
-        ${renderDeveloperMetric(theme, "Project Leadership", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
-        ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
+        ${renderDeveloperMetric(theme, "Public Repositories", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
+        ${renderDeveloperMetric(theme, "Language Variety", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
       </g>
     `;
     headerSvg += devScoreCard;
@@ -265,22 +265,21 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
 
   // Show max 8 languages (keep original behavior)
   const topLangs = languages.slice(0, 8);
-  const validLangs = topLangs.filter((lang) => (lang.percentage / 100) * barWidth > 0.5);
-  const totalPercentage = validLangs.reduce((sum, lang) => sum + lang.percentage, 0);
+  const totalPercentage = topLangs.reduce((sum, lang) => sum + lang.percentage, 0);
 
-  for (let index = 0; index < validLangs.length; index++) {
-    const lang = validLangs[index];
+  for (let index = 0; index < topLangs.length; index++) {
+    const lang = topLangs[index];
     const normalizedPercentage = (lang.percentage / totalPercentage) * 100;
     const width = (normalizedPercentage / 100) * barWidth;
-    const actualWidth = index === validLangs.length - 1 ? barWidth - currentX : width;
+    const actualWidth = index === topLangs.length - 1 ? barWidth - currentX : width;
     segments.push({ x: currentX, width: actualWidth, color: lang.color });
     currentX += actualWidth;
   }
 
   const segmentsSvg = segments.map((seg) => `<rect x="${seg.x}" y="0" width="${seg.width}" height="${barHeight}" fill="${seg.color}"/>`).join("");
 
-  const leftColumn = validLangs.filter((_, i) => i % 2 === 0);
-  const rightColumn = validLangs.filter((_, i) => i % 2 === 1);
+  const leftColumn = topLangs.filter((_, i) => i % 2 === 0);
+  const rightColumn = topLangs.filter((_, i) => i % 2 === 1);
 
   const leftLangsSvg = leftColumn.map((lang, index) => {
     const y = index * 27;
