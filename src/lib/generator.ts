@@ -122,7 +122,6 @@ function renderHeaderSection(
   let headerSvg = '';
   let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
-  // Developer Score Card (60%)
   if (showDevScore) {
     const devScoreCard = `
       <g transform="translate(${startX}, ${currentY})">
@@ -133,15 +132,14 @@ function renderHeaderSection(
         </g>
         ${renderDeveloperMetric(theme, "Contribution Days", `${stats.activeDays} days`, stats.activeDays, 365, "#58a6ff", 48)}
         ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
-        ${renderDeveloperMetric(theme, "Public Repositories", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
-        ${renderDeveloperMetric(theme, "Language Diversity", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
+        ${renderDeveloperMetric(theme, "Public Repository", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
+        ${renderDeveloperMetric(theme, "Language Variety", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
       </g>
     `;
     headerSvg += devScoreCard;
     totalHeight = Math.max(totalHeight, currentY + 178 + 10);
   }
 
-  // Monthly Chart Card (40%) - Use last 10 months
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 200;
@@ -263,7 +261,6 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
   let currentX = 0;
   const segments: { x: number; width: number; color: string }[] = [];
 
-  // Show max 8 languages (keep original behavior)
   const topLangs = languages.slice(0, 8);
   const totalPercentage = topLangs.reduce((sum, lang) => sum + lang.percentage, 0);
 
@@ -291,7 +288,6 @@ function renderLanguagesCard(stats: GitHubStats, theme: ThemeColors, startY: num
     return `<g transform="translate(175, ${y})"><circle cx="6" cy="7" r="5" fill="${lang.color}"/><text x="20" y="11" font-size="12" font-weight="500" fill="${theme.text}" font-family="${FONT_FAMILY}" letter-spacing="0.3">${escapeHtml(lang.name)}</text><text x="155" y="11" font-size="12" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="end" letter-spacing="0.2">${lang.percentage.toFixed(1)}%</text></g>`;
   }).join("");
 
-  // Keep fixed height (210px) even if fewer languages
   return {
     svg: `<g transform="translate(${startX}, ${startY})">
       <rect x="0" y="0" width="377" height="200" rx="14" fill="${theme.cardBackground}" stroke="${theme.border}" stroke-width="1"/>
