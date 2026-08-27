@@ -122,7 +122,7 @@ function renderHeaderSection(
   let headerSvg = '';
   let totalHeight = profileHeight + (showProfile ? 16 : 0);
 
-  // Developer Score Card (60%) - Comes first
+  // Developer Score Card (60%)
   if (showDevScore) {
     const devScoreCard = `
       <g transform="translate(${startX}, ${currentY})">
@@ -141,7 +141,7 @@ function renderHeaderSection(
     totalHeight = Math.max(totalHeight, currentY + 178 + 10);
   }
 
-  // Monthly Chart Card (40%) - Comes after Developer Score
+  // Monthly Chart Card (40%) - Use last 10 months
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
     const graphWidth = 200;
@@ -151,11 +151,11 @@ function renderHeaderSection(
     const areaPoints: string[] = [];
     const linePoints: string[] = [];
 
-    // Get last 7 months (Nov 25, Dec 25, Jan 26, Feb 26, Mar 26, Apr 26, May 26, Jun 26, Jul 26, Aug 26)
-    const last7Months = monthlyData.slice(-7);
+    // Get last 10 months
+    const last10Months = monthlyData.slice(-10);
 
-    last7Months.forEach((data, i) => {
-      const x = 30 + (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
+    last10Months.forEach((data, i) => {
+      const x = 30 + (i / Math.max(last10Months.length - 1, 1)) * graphWidth;
       const y = graphHeight - (data.count / maxCount) * (graphHeight - 6);
       areaPoints.push(`L ${x} ${y}`);
       linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
@@ -172,9 +172,9 @@ function renderHeaderSection(
     const chartX = showDevScore ? startX + 470 + 16 : startX;
     const chartWidth = showDevScore ? 280 : 770;
 
-    // Labels: Nov 25, Feb 26, May 26, Aug 26 (every 3 months)
-    const labelIndices = [0, 3, 6];
-    const labelMonths = last7Months.filter((_, i) => labelIndices.includes(i));
+    // Labels: Nov, Feb, May, Aug (indices 0, 3, 6, 9 for 10 months)
+    const labelIndices = [0, 3, 6, 9];
+    const labelMonths = last10Months.filter((_, i) => labelIndices.includes(i));
 
     const miniChartSvg = `
       <g transform="translate(${chartX}, ${currentY})">
@@ -198,8 +198,8 @@ function renderHeaderSection(
           <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <g transform="translate(30, ${graphHeight + 12})">
             ${labelMonths.map((data, idx) => {
-              const originalIdx = last7Months.indexOf(data);
-              return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
+              const originalIdx = last10Months.indexOf(data);
+              return `<text x="${(originalIdx / Math.max(last10Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
             }).join("")}
           </g>
         </g>
