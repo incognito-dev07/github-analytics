@@ -87,6 +87,7 @@ export interface GitHubStats {
   monthlyContributions: MonthlyContribution[];
   rank: string;
   rankPercentile: number;
+  activeDays: number;
 }
 
 export interface ThemeColors {
