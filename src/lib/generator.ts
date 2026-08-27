@@ -144,8 +144,8 @@ function renderHeaderSection(
   // Monthly Chart Card (40%)
   if (showHeader) {
     const monthlyData = monthlyContributions || [];
-    const graphWidth = 220;
-    const graphHeight = 70;
+    const graphWidth = 190;
+    const graphHeight = 85;
     const maxCount = Math.max(...monthlyData.map((d) => d.count), 1);
 
     const areaPoints: string[] = [];
@@ -155,7 +155,7 @@ function renderHeaderSection(
 
     last7Months.forEach((data, i) => {
       const x = 30 + (i / Math.max(last7Months.length - 1, 1)) * graphWidth;
-      const y = graphHeight - (data.count / maxCount) * (graphHeight - 8);
+      const y = graphHeight - (data.count / maxCount) * (graphHeight - 6);
       areaPoints.push(`L ${x} ${y}`);
       linePoints.push(`${i === 0 ? "M" : "L"} ${x} ${y}`);
     });
@@ -193,7 +193,7 @@ function renderHeaderSection(
           <path d="${areaPath}" fill="url(#miniAreaGradient)" />
           <path d="${linePath}" fill="none" stroke="${theme.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <g transform="translate(30, ${graphHeight + 12})">
-            ${last7Months.filter((_, i) => i % 2 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
+            ${last7Months.filter((_, i) => i % 3 === 0 || i === last7Months.length - 1).map((data, idx, arr) => {
               const originalIdx = last7Months.indexOf(data);
               return `<text x="${(originalIdx / Math.max(last7Months.length - 1, 1)) * graphWidth}" y="0" font-size="8" fill="${theme.textSecondary}" font-family="${FONT_FAMILY}" text-anchor="middle">${data.label}</text>`;
             }).join("")}
@@ -496,4 +496,3 @@ export function generateInsightCard(stats: GitHubStats, options: CardOptions): s
   ${graphSection.svg}
 </svg>
   `.trim();
-}
