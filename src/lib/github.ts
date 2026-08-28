@@ -19,7 +19,7 @@ function renameLanguages(languages: LanguageStats[]): LanguageStats[] {
       return { ...lang, name: 'Golang' };
     }
     if (lang.name === 'PLpgSQL') {
-      return { ...lang, name: 'PL/pgSQL'}
+      return { ...lang, name: 'Postgresql'}
     }
     return lang;
   });
