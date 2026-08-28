@@ -1,6 +1,6 @@
 ## GitHub Analytics
 
-Generate beautiful, customizable GitHub stats cards for your profile README.
+Generate beautiful and customizable stats cards for your GitHub profile RRADME which includes stars, contributions, top languages, monthly chart and more
 
 <p align="center">
   <img src="https://github-analytics-incog.vercel.app/api?username=torvalds&theme=github_dark" alt="GitHub Analytics" />
