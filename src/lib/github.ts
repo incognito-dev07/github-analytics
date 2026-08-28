@@ -13,10 +13,13 @@ const graphqlWithAuth = graphql.defaults({
   },
 });
 
-function renameGoToGolang(languages: LanguageStats[]): LanguageStats[] {
+function renameLanguages(languages: LanguageStats[]): LanguageStats[] {
   return languages.map(lang => {
     if (lang.name === 'Go') {
       return { ...lang, name: 'Golang' };
+    }
+    if (lang.name === 'PLpgSQL') {
+      return { ...lang, name: 'PostgreSQL'}
     }
     return lang;
   });
@@ -225,7 +228,7 @@ export async function fetchGitHubStats(username: string, hiddenLanguages: string
       }))
       .sort((a, b) => b.percentage - a.percentage);
 
-    languages = renameGoToGolang(languages);
+    languages = renameLanguages(languages);
 
     const contributionDays: ContributionDay[] = user.contributionsCollection.contributionCalendar.weeks
       .flatMap((w) => w.contributionDays);
