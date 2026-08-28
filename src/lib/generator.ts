@@ -133,7 +133,7 @@ function renderHeaderSection(
         ${renderDeveloperMetric(theme, "Contribution Days", `${stats.activeDays} days`, stats.activeDays, 365, "#58a6ff", 48)}
         ${renderDeveloperMetric(theme, "Community Reach", formatNumber(stats.user.followers.totalCount) + " follows", stats.user.followers.totalCount, 1000, "#f0883e", 78)}
         ${renderDeveloperMetric(theme, "Public Repository", `${stats.user.repositories.totalCount} repos`, stats.user.repositories.totalCount, 20, "#d29922", 108)}
-        ${renderDeveloperMetric(theme, "Language Variety", `${stats.languages.length} languages`, stats.languages.length, 20, "#3fb950", 138)}
+        ${renderDeveloperMetric(theme, "Language Variety", `${stats.languages.length} languages`, stats.languages.length, 16, "#3fb950", 138)}
       </g>
     `;
     headerSvg += devScoreCard;
